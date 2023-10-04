@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>toDo-App with ls</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="myTodo">
+        <div class="inputvalue">
+          <input
+            type="text"
+            class="inputVal"
+            placeholder="# add your task here"
+            value=""
+          />
+          <button class="btn">Add</button>
+        </div>
+
+        <div class="todoListItem"></div>
+        <button class="clearTask" onclick="clearTask()">clear all</button>
+      </div>
+    </div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
+
+<!--
+    <div class="todoList">
+            <p class="pText">swimming</p>
+            <button class="deleteTask" onclick="deleteItem(${index})"></button>
+    </div>
+-->
