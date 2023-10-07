@@ -1,5 +1,5 @@
 const dateMEZ = new Date();
-console.log(dateMEZ); 
+// console.log(dateMEZ); 
 
 document.getElementById('time-heading').innerHTML = dateMEZ.toLocaleDateString('de-DE');
 
