@@ -14,6 +14,8 @@ const state = JSON.parse(localStorage.getItem('state')) || {
 btnAdd.addEventListener('click', addTodo);
 
 
+
+
 function addTodo(e) {
     e.preventDefault(); //button automatically reloads the page & preventDefault stops this 
 
@@ -26,6 +28,7 @@ function addTodo(e) {
     localStorage.setItem('state', JSON.stringify(state))
     todoDescription.value = '';
     todoDescription.focus(); //inputfield stays active
+    location.reload();
 }
 
 //show todos on app
