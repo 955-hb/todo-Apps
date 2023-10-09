@@ -2,16 +2,34 @@ const remBtn = document.querySelector('.removeBtn');
 const addBtn = document.querySelector('.addBtn');
 const inputField = document.querySelector('.input');
 const ulEl = document.querySelector('.todo-container');
+const delLsBtn = document.querySelector('.delLsBtn');
 
+//check if something is in the state
+const state = {
+  todos: [
+    { description: "Learn HTML", done: true},
+    { description: "Learn CSS", done: true},
+    { description: "Learn JavaScript", done: false}
+  ],
+};
+
+//CLICK-EVENT
 addBtn.addEventListener('click', () => {
   addInput();
   inputField.value = ''; //set input-field to empty
 })
 
+
+
 function addInput() {
+  
+  // show todos in DOM
   const inputValue = inputField.value.trim(); //remove blank character
-  console.log(inputValue);
+  
   if (inputValue !== '') {
+    todoArr = inputValue;
+
+    
     const newLi = document.createElement('li');
     const newInput = document.createElement('input');
     newInput.setAttribute('type', 'checkbox');
@@ -37,7 +55,10 @@ remBtn.addEventListener('click', () => {
   });
 });
 
-
+delLsBtn.addEventListener('click', () => {
+  localStorage.clear();
+  addInput();
+})
 
 
 
