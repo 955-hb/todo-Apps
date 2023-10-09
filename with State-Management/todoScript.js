@@ -81,5 +81,5 @@ renderTodos();
 //clear LocalStorage
 btnClear.addEventListener("click", () => {
   localStorage.clear();
-  console.log("clear LS");
+  //console.log("clear LS");
 });
