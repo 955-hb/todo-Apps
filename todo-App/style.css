@@ -31,6 +31,12 @@ input[type="radio"] {
   margin-right: 15px;
 }
 
+input:focus,
+button:focus,
+input[type="radio"]:focus {
+  outline: 1px solid black;
+}
+
 .todo-container {
   padding: 1rem 0;
   display: flex;
