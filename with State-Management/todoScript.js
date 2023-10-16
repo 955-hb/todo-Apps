@@ -34,7 +34,7 @@ function addTodo(e) {
 function renderTodos() {
   const todosList = document.querySelector("#todos-list");
 
-  for (const todo of state.todos) {
+  for (const todo of state) {
     //create <li>
     const newTodoLi = document.createElement("li");
 
