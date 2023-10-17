@@ -19,11 +19,14 @@ loadFromLocalStorage();
 renderTodos();
 
 //CLICK-EVENT
-addBtn.addEventListener("click", () => {
+addBtn.addEventListener("click", (e) => {
   addInput();
-
+  e.preventDefault();
+  inputField.focus();
   inputField.value = ""; //set input-field to empty
 });
+
+//ulEl.addEventListener('change', updateTodo)
 
 //load in LocalFromStorage & State
 function loadFromLocalStorage() {
@@ -33,7 +36,7 @@ function loadFromLocalStorage() {
     state.todos = storedTodos;
   }
 }
-
+//addInput
 function addInput(e) {
   //e.preventDefault();  //errormessage, why?
 
@@ -65,6 +68,7 @@ function renderTodos() {
     const doneCheckbox = document.createElement("input");
     doneCheckbox.type = "checkbox";
     doneCheckbox.checked = todo.done;
+
     doneCheckbox.addEventListener("change", function (e) {
       const newTodoDoneState = e.target.checked;
       todo.done = newTodoDoneState;
