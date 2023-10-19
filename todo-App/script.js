@@ -5,9 +5,14 @@ const addBtn = document.querySelector(".addBtn");
 const inputField = document.querySelector(".input");
 const ulEl = document.querySelector(".todo-container");
 const delLsBtn = document.querySelector(".delLsBtn");
+const radioContainer = document.querySelector(".filter-container")
+
+//radio-Filter
+const filterOptions = ['all', 'done', 'open'];
 
 //template state
 const state = {
+  filter: 'all',
   todos: [
     { description: "Learn HTML", done: true, id: 1 },
     { description: "Learn CSS", done: true, id: 2 },
@@ -15,6 +20,143 @@ const state = {
   ],
 };
 
+addBtn.addEventListener('click', () => {
+  addInput();
+  inputField.value = '';
+  saveTodoAppStateToLocalStorage();
+});
+
+inputField.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    addInput();
+    inputField.value = '';
+  }
+});
+
+toDoAppStateDataFromLocalStorage();
+render();
+
+function toDoAppStateDataFromLocalStorage() {
+  const toDoAppStateJSON = localStorage.getItem('todos');
+  if (toDoAppStateJSON !== null) {
+    todos = JSON.parse(toDoAppStateJSON);
+  } else {
+    console.log('keine Daten im local Storage!');
+  };
+}
+
+function render() {
+  ulEl.innerHTML = '';
+  const filter = state.todos.filter;
+
+  for (let todo of state.todos) {
+    const isDone = todo.done;
+
+    if (
+      filter === 'all' ||
+      (filter === 'done && isDone') ||
+      (filter === 'open' && !isDone)
+    ) {
+      const newLi = document.createElement('li');
+      const newInput = document.createElement('input');
+
+      newLi.setAttribute('data-id', todo.id);
+
+      newInput.addEventListener('input', () => {
+        todo.done = newInput.checked;
+        updateStyling(newLi, newInput, todo.done);
+        saveTodoAppStateToLocalStorage();
+        console.log(todo.done);
+      });
+      newInput.setAttribute('type', 'checkbox');
+      newInput.checked = todo.done;
+      updateStyling(newLi, newInput, todo.done);
+
+      const liText = document.createTextNode(todo.description);
+
+      newLi.append(newInput);
+      newLi.append(liText);
+      ulEl.append(newLi);
+    }
+  }
+}
+
+function updateStyling(liElement, checkbox, isDone) {
+  if (isDone) {
+    liElement.style.textDecoration = 'line-through';
+    checkbox.checked = true;
+  } else {
+    liElement.style.textDecoration = 'none';
+    checkbox.checked = false;
+  }
+}
+
+function addInput() {
+  const inputValue = inputField.value.trim();
+  console.log(inputValue);
+  if (inputValue !== '' && inputValue.length >=4) {
+    const newTodo = {
+      id: Math.floor(Math.random() * 30000),
+      description: inputValue,
+      done: false,
+    };
+    console.log('Gen ID:', newTodo.id);
+    state.todos.push(newTodo);
+    inputField.value = '';
+
+    render();
+    saveTodoAppStateToLocalStorage();
+  } else {
+    alert('unzulässige Eingabe!');
+    inputField.value = '';
+  }
+}
+
+function saveTodoAppStateToLocalStorage() {
+  const toDoAppStateJSON = JSON.stringify(todos);
+  localStorage.setItem('todos', toDoAppStateJSON);
+}
+
+remBtn.addEventListener('click', removeDoneToDos);
+
+function removeDoneToDos() {
+  const checkboxesChecked = ulEl.querySelectorAll(
+    "input[type='checkbox']:checked"
+    );
+
+    checkboxesChecked.forEach((checkbox) => {
+      const li = checkbox.parentElement;
+      const todoId = parseInt(li.getAttribute("data-id"), 10);
+
+      state.todos = state.todos.filter(
+        (todo) => todo.id !== todoId
+      );
+      li.remove(); 
+    });
+    saveTodoAppStateToLocalStorage();
+}
+
+delLsBtn.addEventListener("click", () => {
+  localStorage.clear();
+});
+
+radioContainer.addEventListener('change', updateFilter);
+
+function updateFilter() {
+  const selectedFilter = event.target.value;
+  state.filter = selectedFilter;
+  render();
+}
+
+
+
+
+
+
+
+
+
+/*
 loadFromLocalStorage();
 renderTodos();
 
@@ -63,8 +205,29 @@ function addInput(e) {
 
 function renderTodos() {
   ulEl.innerHTML = "";
+  const filter = state.filter;
+  let filteredTodos = state.todos;
+
+  // if (filterOpen.checked){
+  //   filteredTodos = filteredTodos.filter(todo => !todo.done);
+  // } else if (filterDone.checked) {
+  //   filteredTodos = filteredTodos.filter(todo => todo.done);
+  // };
+  for ( let todo of state.todos) {
+    if (
+      filter === "all" ||
+      (filter === "done" && isDone) ||
+      (filter === "open" && !isDone)
+      ){
+      const newLi = document.createElement("li");
+      const newInput = document.createElement("input");
+      };
+
+  }
+  
+
   //change done-status
-  for (let todo of state.todos) {
+  for (const todo of filteredTodos) {
     const doneCheckbox = document.createElement("input");
     doneCheckbox.type = "checkbox";
     doneCheckbox.checked = todo.done;
@@ -100,4 +263,15 @@ delLsBtn.addEventListener("click", () => {
 function updateLocalStorage() {
   //update LocalStorage
   localStorage.setItem("todos", JSON.stringify(state.todos));
-}
+  }
+
+
+// radioFilter.forEach((radio) => {
+//   radio.addEventListener('change', radioChange)
+// });
+// function radioChange(e){
+//   const selectedRadio = e.target.id;
+//   console.log(selectedRadio);
+// }
+*/
+
