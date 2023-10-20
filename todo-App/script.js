@@ -37,9 +37,9 @@ toDoAppStateDataFromLocalStorage();
 render();
 
 function toDoAppStateDataFromLocalStorage() {
-  const toDoAppStateJSON = localStorage.getItem('todos');
+  const toDoAppStateJSON = localStorage.getItem('state'); //eintrag wird ausgelesen
   if (toDoAppStateJSON !== null) {
-    todos = JSON.parse(toDoAppStateJSON);
+    state = JSON.parse(toDoAppStateJSON);
   } else {
     console.log('keine Daten im local Storage!');
   };
@@ -47,7 +47,7 @@ function toDoAppStateDataFromLocalStorage() {
 
 function render() {
   ulEl.innerHTML = '';
-  const filter = state.todos.filter;
+  const filter = state.filter;
 
   for (let todo of state.todos) {
     const isDone = todo.done;
@@ -63,7 +63,7 @@ function render() {
       newLi.setAttribute('data-id', todo.id);
 
       newInput.addEventListener('input', () => {
-        todo.done = newInput.checked;
+        todo.done = newInput.checked; //sync vom state und client-oberfläche
         updateStyling(newLi, newInput, todo.done);
         saveTodoAppStateToLocalStorage();
         console.log(todo.done);
@@ -92,7 +92,7 @@ function updateStyling(liElement, checkbox, isDone) {
 }
 
 function addInput() {
-  const inputValue = inputField.value.trim();
+  const inputValue = inputField.value.trim(); //entfernt leerzeichen vor & nach value
   console.log(inputValue);
   if (inputValue !== '' && inputValue.length >=4) {
     const newTodo = {
@@ -105,7 +105,7 @@ function addInput() {
     inputField.value = '';
 
     render();
-    saveTodoAppStateToLocalStorage();
+    saveTodoAppStateToLocalStorage(); //neues todo? aktueller Stand wird gespeichert
   } else {
     alert('unzulässige Eingabe!');
     inputField.value = '';
@@ -113,7 +113,7 @@ function addInput() {
 }
 
 function saveTodoAppStateToLocalStorage() {
-  const toDoAppStateJSON = JSON.stringify(todos);
+  const toDoAppStateJSON = JSON.stringify(state); 
   localStorage.setItem('todos', toDoAppStateJSON);
 }
 
@@ -128,6 +128,7 @@ function removeDoneToDos() {
       const li = checkbox.parentElement;
       const todoId = parseInt(li.getAttribute("data-id"), 10);
 
+      //entfernt todo aus dem state anhand der id
       state.todos = state.todos.filter(
         (todo) => todo.id !== todoId
       );
@@ -140,6 +141,7 @@ delLsBtn.addEventListener("click", () => {
   localStorage.clear();
 });
 
+//aktualisieren des filters im todo
 radioContainer.addEventListener('change', updateFilter);
 
 function updateFilter() {
