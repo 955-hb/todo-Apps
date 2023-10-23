@@ -6,12 +6,13 @@ const inputField = document.querySelector(".input");
 const ulEl = document.querySelector(".todo-container");
 const delLsBtn = document.querySelector(".delLsBtn");
 const radioContainer = document.querySelector(".filter-container")
+const form = document.querySelector('.todo-input');
 
 //radio-Filter
 const filterOptions = ['all', 'done', 'open'];
 
 //template state
-const state = {
+let state = {
   filter: 'all',
   todos: [
     { description: "Learn HTML", done: true, id: 1 },
@@ -20,17 +21,11 @@ const state = {
   ],
 };
 
-addBtn.addEventListener('click', () => {
+form.addEventListener('submit', (e) => {
+  e.preventDefault();
   addInput();
   inputField.value = '';
   saveTodoAppStateToLocalStorage();
-});
-
-inputField.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    addInput();
-    inputField.value = '';
-  }
 });
 
 toDoAppStateDataFromLocalStorage();
@@ -114,7 +109,7 @@ function addInput() {
 
 function saveTodoAppStateToLocalStorage() {
   const toDoAppStateJSON = JSON.stringify(state); 
-  localStorage.setItem('todos', toDoAppStateJSON);
+  localStorage.setItem('state', toDoAppStateJSON);
 }
 
 remBtn.addEventListener('click', removeDoneToDos);
