@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./reset.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <title>todo App</title>
+  </head>
+
+  <body>
+    <!--  aktuelles Datum -->
+    <header class="date-h1">
+      <h2 id="time-heading"></h2>
+    </header>
+
+    <main class="main">
+      <section class="filter-and-options">
+        <h1>Todo App</h1>
+        <div class="filter-container">
+          <!-- radio ALL -->
+          <label for="all"
+            >ALL
+            <input type="radio" id="all" name="filter" value="all" />
+          </label>
+
+          <!-- radio OPEN -->
+          <label for="open"
+            >OPEN
+            <input type="radio" id="open" name="filter" value="open" />
+          </label>
+
+          <!-- radio DONE -->
+          <label for="done"
+            >DONE
+            <input type="radio" id="done" name="filter" value="done" />
+          </label>
+        </div>
+
+        <!-- Remove Button -->
+        <button class="removeBtn">Remove done Todos</button>
+        <!-- Delete LocalStorage Button -->
+        <button class="delLsBtn">delete Local Storage</button>
+        <br />
+      </section>
+      <form class="todo-input">
+        <!-- Input Field -->
+        <input type="text" class="input" placeholder="Whats up?" />
+
+        <!-- Add Button -->
+        <button class="addBtn">Add</button>
+      </form>
+      <!-- todo-Container & UL & LI  -->
+      <section class="todos">
+        <br>
+        <h4>your Todos:</h4>
+        <ul class="todo-container"></ul>
+      </section>
+    </main>
+  </body>
+
+  <script src="./script.js"></script>
+  <script src="./dateScript.js"></script>
+</html>
