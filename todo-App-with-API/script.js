@@ -9,64 +9,46 @@ const radioContainer = document.querySelector(".filter-container");
 const form = document.querySelector(".todo-input");
 
 const urlApi = "http://localhost:4730/todos";
-const todos = await loadApiTasks();
 
 //radio-Filter
-//const filterOptions = ["all", "done", "open"];
+const filterOptions = ["all", "done", "open"];
 
-/*
 //template state
 let state = {
-  filter: 'all',
-  todos: [
-    { description: "Learn HTML", done: true, id: 1 },
-    { description: "Learn CSS", done: true, id: 2 },
-    { description: "Learn JavaScript", done: false, id: 3 },
-  ],
+  filter: "all",
+  todos: [],
 };
-*/
 
-
-
-
-form.addEventListener("submit", (e) => {
+form.addEventListener("submit", async (e) => {
   e.preventDefault();
-  loadApiTasks()
-  addInput();
+  await addInput();
+  await loadApiTasks();
+
   inputField.value = "";
-  //saveTodoAppStateToLocalStorage();
 });
 
-//toDoAppStateDataFromLocalStorage();
-//render();
+async function init() {
+  state.todos = await loadApiTasks();
+  render();
+}
+init();
 
 async function loadApiTasks() {
   const response = await fetch(urlApi);
   const todosData = await response.json();
-  
+
   render();
-  console.log(todosData);
+  //console.log(todosData);
 
   return todosData;
 }
 
-
-/*
-function toDoAppStateDataFromLocalStorage() {
-  const toDoAppStateJSON = localStorage.getItem("state"); //eintrag wird ausgelesen
-  if (toDoAppStateJSON !== null) {
-    state = JSON.parse(toDoAppStateJSON);
-  } else {
-    console.log("keine Daten im local Storage!");
-  }
-}
-*/
-
 function render() {
   ulEl.innerHTML = "";
-  const filter = todos.filter;
+  const filter = state.filter;
+  //console.log(todos);
 
-  for (let todo of todos) {
+  for (let todo of state.todos) {
     const isDone = todo.done;
 
     if (
@@ -82,8 +64,7 @@ function render() {
       newInput.addEventListener("input", () => {
         todo.done = newInput.checked; //sync vom state und client-oberfläche
         updateStyling(newLi, newInput, todo.done);
-        //saveTodoAppStateToLocalStorage();
-        console.log(todo.done);
+        //console.log(todo.done);
       });
       newInput.setAttribute("type", "checkbox");
       newInput.checked = todo.done;
@@ -113,36 +94,26 @@ async function addInput() {
   console.log(inputValue);
   if (inputValue !== "" && inputValue.length >= 4) {
     const newTodo = {
-      id: Math.floor(Math.random() * 30000),
+      //id: Math.floor(Math.random() * 30000), ID wird von todo-Api erzeugt!
       description: inputValue,
       done: false,
     };
-    console.log("Gen ID:", newTodo.id);
-    todos.push(newTodo);
+
+    const addTodoRequest = await fetch(urlApi, {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify(newTodo),
+    });
+    const addTodoResponse = await addTodoRequest.json();
+    state.todos.push(addTodoRequest);
     inputField.value = "";
 
     render();
-    //saveTodoAppStateToLocalStorage(); //neues todo? aktueller Stand wird gespeichert
   } else {
     alert("unzulässige Eingabe!");
     inputField.value = "";
   }
-
-  const addTodoRequest = await fetch(urlApi, {
-    method: "POST",
-    headers: { "Content-type": "application/json" },
-    body: JSON.stringify(newInput),
-  });
-  const addTodoResponse = await addTodoRequest.json();
-  todos.push(addTodoRequest);
 }
-
-/*
-function saveTodoAppStateToLocalStorage() {
-  const toDoAppStateJSON = JSON.stringify(state);
-  localStorage.setItem("state", toDoAppStateJSON);
-}
-*/
 
 remBtn.addEventListener("click", removeDoneToDos);
 
@@ -151,24 +122,23 @@ function removeDoneToDos() {
     "input[type='checkbox']:checked"
   );
 
-  checkboxesChecked.forEach((checkbox) => {
+  checkboxesChecked.forEach(async (checkbox) => {
     const li = checkbox.parentElement;
     const todoId = parseInt(li.getAttribute("data-id"), 10);
 
     //entfernt todo aus dem state anhand der id
-    todos = todos.filter((todo) => todo.id !== todoId);
+    state.todos = state.todos.filter((todo) => todo.id !== todoId);
+
+    await fetch(urlApi + "/" + todoId, {
+      method: "DELETE",
+      headers: { "Content-type": "application/json" },
+    });
+
     li.remove();
   });
 
-  fetch(urlApi + "/" + id, {
-    method: "PUT",
-    headers: { "Content-type": "application/json" },
-    body: JSON.stringify(todos),
-  });
-  console.log(todos);
-
-  loadTasksFromApi();
-  //saveTodoAppStateToLocalStorage();
+  //console.log(state.todos);
+  loadApiTasks();
 }
 
 delLsBtn.addEventListener("click", () => {
@@ -180,6 +150,6 @@ radioContainer.addEventListener("change", updateFilter);
 
 function updateFilter() {
   const selectedFilter = event.target.value;
-  filter = selectedFilter;
+  state.filter = selectedFilter;
   render();
 }
